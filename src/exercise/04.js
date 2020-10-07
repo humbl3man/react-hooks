@@ -8,29 +8,12 @@ function resetSquareState() {
 }
 
 function Board() {
-  // 🐨 squares is the state for this component. Add useState for squares
   const [squares, setSquares] = useState(resetSquareState)
-
-  // 🐨 We'll need the following bits of derived state:
-  // - nextValue ('X' or 'O')
-  // - winner ('X', 'O', or null)
-  // - status (`Winner: ${winner}`, `Scratch: Cat's game`, or `Next player: ${nextValue}`)
-
   const [nextValue, setNextValue] = useState('X')
   const [winner, setWinner] = useState(null)
   const [status, setStatus] = useState(null)
 
-  // 💰 I've written the calculations for you! So you can use my utilities
-  // below to create these variables
-
-  // This is the function your square click handler will call. `square` should
-  // be an index. So if they click the center square, this will be `4`.
   function selectSquare(squareIndex) {
-    // 🐨 first, if there's already winner or there's already a value at the
-    // given square index (like someone clicked a square that's already been
-    // clicked), then return early so we don't make any state changes
-    //
-
     if (winner || squares[squareIndex] !== null) {
       return
     }
