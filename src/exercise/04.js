@@ -1,17 +1,56 @@
 // useState: tic tac toe
 // http://localhost:3000/isolated/exercise/04.js
 
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 function resetSquareState() {
   return Array(9).fill(null)
 }
 
+function useLocalStorage({
+  key,
+  defaultValue = '',
+  serialize = JSON.stringify,
+  deserialize = JSON.parse,
+} = {}) {
+  const [state, setState] = useState(() => {
+    const stateFromLocalStorage = window.localStorage.getItem(key)
+
+    if (stateFromLocalStorage) {
+      return deserialize(stateFromLocalStorage)
+    }
+
+    return typeof defaultValue === 'function' ? defaultValue() : defaultValue
+  })
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(key, serialize(state))
+    } catch (ex) {
+      window.localStorage.removeItem(key)
+    }
+  }, [state, key, serialize])
+
+  return [state, setState]
+}
+
 function Board() {
-  const [squares, setSquares] = useState(resetSquareState)
-  const [nextValue, setNextValue] = useState('X')
-  const [winner, setWinner] = useState(null)
-  const [status, setStatus] = useState(null)
+  const [squares, setSquares] = useLocalStorage({
+    key: 'squares',
+    defaultValue: resetSquareState,
+  })
+  const [nextValue, setNextValue] = useLocalStorage({
+    key: 'nextValue',
+    defaultValue: 'X',
+  })
+  const [winner, setWinner] = useLocalStorage({
+    key: 'winner',
+    defaultValue: null,
+  })
+  const [status, setStatus] = useLocalStorage({
+    key: 'status',
+    defaultValue: null,
+  })
 
   function selectSquare(squareIndex) {
     if (winner || squares[squareIndex] !== null) {
