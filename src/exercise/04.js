@@ -39,18 +39,9 @@ function Board() {
     key: 'squares',
     defaultValue: resetSquareState,
   })
-  const [nextValue, setNextValue] = useLocalStorage({
-    key: 'nextValue',
-    defaultValue: 'X',
-  })
-  const [winner, setWinner] = useLocalStorage({
-    key: 'winner',
-    defaultValue: null,
-  })
-  const [status, setStatus] = useLocalStorage({
-    key: 'status',
-    defaultValue: null,
-  })
+  const nextValue = calculateNextValue(squares)
+  const winner = calculateWinner(squares)
+  const status = calculateStatus(winner, squares, nextValue)
 
   function selectSquare(squareIndex) {
     if (winner || squares[squareIndex] !== null) {
@@ -61,22 +52,10 @@ function Board() {
     const nextValueCopy = nextValue
     squaresCopy[squareIndex] = nextValueCopy
     setSquares(squaresCopy)
-    setNextValue(calculateNextValue(squaresCopy))
-    setWinner(calculateWinner(squaresCopy))
-    setStatus(
-      calculateStatus(
-        calculateWinner(squaresCopy),
-        squaresCopy,
-        calculateNextValue(squaresCopy),
-      ),
-    )
   }
 
   function restart() {
     setSquares(resetSquareState)
-    setWinner(null)
-    setStatus(null)
-    setNextValue('X')
   }
 
   function renderSquare(i) {
